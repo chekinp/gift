@@ -8,6 +8,7 @@ type LetterProps = {
 }
 
 const EASE = [0.22, 1, 0.36, 1] as const
+const asset = (name: string) => `${import.meta.env.BASE_URL}${name}`
 
 export function Letter({ reduceMotion }: LetterProps) {
   const headingRef = useRef<HTMLHeadingElement>(null)
@@ -122,7 +123,7 @@ export function Letter({ reduceMotion }: LetterProps) {
               </motion.div>
 
               <motion.div variants={item} className="letter__photo letter__photo--hero">
-                <img src="/ob_2.jpg" alt="" loading="eager" />
+                <img src={asset('ob_2.jpg')} alt="" loading="eager" />
               </motion.div>
 
               {hasGreeting && (
@@ -207,10 +208,10 @@ export function Letter({ reduceMotion }: LetterProps) {
 
             <motion.div className="letter__photos-pair" variants={item}>
               <div className="letter__photo letter__photo--half">
-                <img src="/d_n.jpg" alt="" loading="lazy" />
+                <img src={asset('d_n.jpg')} alt="" loading="lazy" />
               </div>
               <div className="letter__photo letter__photo--half">
-                <img src="/d_y.jpg" alt="" loading="lazy" />
+                <img src={asset('d_y.jpg')} alt="" loading="lazy" />
               </div>
             </motion.div>
 
@@ -245,7 +246,7 @@ export function Letter({ reduceMotion }: LetterProps) {
               variants={item}
               className="letter__photo letter__photo--final"
             >
-              <img src="/ob_fin.jpg" alt="" loading="lazy" />
+              <img src={asset('ob_fin.jpg')} alt="" loading="lazy" />
             </motion.div>
           </div>
         </motion.div>

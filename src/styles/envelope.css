@@ -1,0 +1,544 @@
+.envelope-trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.envelope-trigger:disabled {
+  cursor: default;
+}
+
+.envelope-trigger:focus-visible {
+  outline: none;
+}
+
+.envelope-trigger:focus-visible .envelope {
+  border-radius: 10px;
+  outline: 2px solid var(--wax);
+  outline-offset: 10px;
+}
+
+.envelope-entrance {
+  display: block;
+}
+
+.envelope {
+  position: relative;
+  display: block;
+  width: min(clamp(19rem, 64vw, 29rem), 58vh);
+  aspect-ratio: 1.5;
+  perspective: 1500px;
+  will-change: transform;
+}
+
+.envelope__shadow {
+  position: absolute;
+  right: 5%;
+  bottom: -7%;
+  left: 5%;
+  z-index: 0;
+  height: 17%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(var(--shadow-rgb), 0.17) 0%,
+    rgba(var(--shadow-rgb), 0.05) 52%,
+    transparent 76%
+  );
+  filter: blur(10px);
+  pointer-events: none;
+  transition:
+    transform 340ms var(--ease-out),
+    opacity 340ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .envelope-trigger:not(:disabled):hover .envelope__shadow {
+    opacity: 0.78;
+    transform: translateY(4px) scaleX(1.02);
+  }
+}
+
+.envelope__back {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 9px;
+  background-color: var(--env-back);
+  background-image: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.36) 0%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(105, 79, 142, 0.06) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 0 0 1px rgba(var(--shadow-rgb), 0.07),
+    0 22px 46px -22px rgba(var(--shadow-rgb), 0.26),
+    0 4px 12px -4px rgba(var(--shadow-rgb), 0.12);
+}
+
+.envelope__back::after {
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-size: 160px 160px;
+  opacity: 0.075;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  content: '';
+}
+
+.envelope__liner {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  left: 8px;
+  height: 54%;
+  border-radius: 5px 5px 0 0;
+  background-color: var(--env-liner);
+  background-image: linear-gradient(180deg, var(--paper) 0%, var(--paper-raised) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--shadow-rgb), 0.05),
+    inset 0 8px 22px rgba(var(--shadow-rgb), 0.055);
+}
+
+.envelope__liner::before,
+.envelope__flap-lining::before {
+  position: absolute;
+  inset: 0;
+  background: var(--wax);
+  mask: url('../assets/liner.svg') repeat;
+  mask-size: 112px 112px;
+  content: '';
+  pointer-events: none;
+}
+
+/* Тень от открывающегося клапана внутри конверта — глубина раскрытия */
+.envelope__liner-shade {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  left: 8px;
+  height: 54%;
+  z-index: 1;
+  border-radius: 5px 5px 0 0;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--shadow-rgb), 0.18) 0%,
+    rgba(var(--shadow-rgb), 0.08) 42%,
+    transparent 82%
+  );
+  opacity: 0;
+  transition: opacity 900ms var(--ease-out);
+  pointer-events: none;
+}
+
+.envelope.is-opening .envelope__liner-shade {
+  opacity: 1;
+}
+
+/* Мягкая тень под кончиком клапана */
+.envelope__flap::before {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 80%;
+  height: 12%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(var(--shadow-rgb), 0.18) 0%,
+    rgba(var(--shadow-rgb), 0.08) 48%,
+    transparent 76%
+  );
+  filter: blur(8px);
+  transform: translateX(-50%) translateZ(-1px);
+  opacity: 1;
+  transition: opacity 900ms var(--ease-out);
+  pointer-events: none;
+  content: '';
+}
+
+.envelope.is-opening .envelope__flap::before {
+  opacity: 0;
+}
+
+.envelope__card {
+  position: absolute;
+  top: 6%;
+  right: 7%;
+  left: 7%;
+  z-index: 2;
+  height: 88%;
+  overflow: hidden;
+  border-radius: 3px 6px 4px 7px / 6px 3px 7px 4px;
+  background-color: var(--paper);
+  background-image: linear-gradient(
+    160deg,
+    var(--paper-raised) 0%,
+    var(--paper) 58%,
+    var(--env-liner) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 0 0 1px rgba(var(--shadow-rgb), 0.06),
+    0 6px 16px -8px rgba(var(--shadow-rgb), 0.2);
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+.envelope__card-inner {
+  position: absolute;
+  inset: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 22px;
+  gap: 9px;
+  border: 1px solid var(--accent-hairline);
+}
+
+.envelope__card-preview-line {
+  display: block;
+  width: 46%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-hairline) 28%,
+    var(--accent-hairline) 72%,
+    transparent
+  );
+}
+
+.envelope__card-preview-line--short {
+  width: 26%;
+  margin-bottom: 1px;
+}
+
+.envelope__side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 50%;
+  pointer-events: none;
+}
+
+.envelope__side--left {
+  left: 0;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  background: linear-gradient(
+    110deg,
+    var(--env-side-left) 0%,
+    var(--env-side-right) 100%
+  );
+}
+
+.envelope__side--right {
+  right: 0;
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  background: linear-gradient(
+    250deg,
+    var(--env-side-left) 0%,
+    var(--env-side-right) 100%
+  );
+}
+
+.envelope__pocket {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+  background: linear-gradient(
+    180deg,
+    var(--env-pocket) 0%,
+    #cdb7df 100%
+  );
+  filter: drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.58))
+    drop-shadow(0 -6px 10px rgba(var(--shadow-rgb), 0.07));
+  pointer-events: none;
+}
+
+.envelope__pocket-edge {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.envelope__pocket-edge path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.58);
+  stroke-width: 0.65;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 1px rgba(var(--shadow-rgb), 0.1));
+}
+
+.envelope__flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  width: 100%;
+  height: 50%;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.envelope.is-flap-settled .envelope__flap {
+  z-index: 1;
+}
+
+.envelope__flap-face,
+.envelope__flap-lining {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  backface-visibility: hidden;
+}
+
+.envelope__flap-face {
+  background: linear-gradient(
+    180deg,
+    var(--env-flap) 0%,
+    #dcc9e9 100%
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  filter: drop-shadow(0 3px 3px rgba(var(--shadow-rgb), 0.08));
+}
+
+.envelope__flap-edge {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.envelope__flap-edge path {
+  fill: none;
+  stroke: rgba(var(--shadow-rgb), 0.14);
+  stroke-width: 0.75;
+  vector-effect: non-scaling-stroke;
+}
+
+.envelope__flap-lining {
+  transform: rotateX(180deg) translateZ(1px);
+  background-color: var(--env-liner);
+  background-image: linear-gradient(180deg, var(--paper) 0%, var(--paper-raised) 100%);
+  box-shadow: inset 0 0 28px rgba(var(--shadow-rgb), 0.075);
+}
+
+.envelope__flap-lining::before {
+  mask-size: 104px 104px;
+}
+
+.envelope__seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 8;
+  width: 20.5%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(var(--shadow-rgb), 0.26))
+    drop-shadow(0 6px 9px rgba(var(--shadow-rgb), 0.16));
+  transition: transform 340ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .envelope-trigger:not(:disabled):hover .envelope__seal {
+    transform: translate(-50%, -50%) scale(1.035) rotate(-2deg);
+  }
+}
+
+.envelope__seal-shadow {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 42%,
+    rgba(var(--shadow-rgb), 0.34) 0%,
+    rgba(var(--shadow-rgb), 0.16) 58%,
+    transparent 78%
+  );
+  filter: blur(6px);
+  transform: translateY(3.5%) scale(0.98, 0.9);
+  transition: opacity 260ms var(--ease-out);
+  pointer-events: none;
+}
+
+.envelope.is-opening .envelope__seal-shadow {
+  opacity: 0;
+}
+
+/* Свежий излом виден только в момент раскола */
+.envelope__seal-half::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 42%,
+    rgba(70, 42, 94, 0.32) 50%,
+    rgba(240, 216, 245, 0.4) 54%,
+    transparent 62%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0;
+  pointer-events: none;
+  content: '';
+}
+
+.envelope.is-opening .envelope__seal-half::after {
+  opacity: 1;
+}
+
+.envelope__seal-half--right::after {
+  background: linear-gradient(
+    270deg,
+    transparent 42%,
+    rgba(70, 42, 94, 0.32) 50%,
+    rgba(240, 216, 245, 0.4) 54%,
+    transparent 62%
+  );
+}
+
+
+/* Восковые крошки — разлетаются в момент раскола печати */
+.envelope__wax-crumbs {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 9;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.envelope__crumb {
+  position: absolute;
+  display: block;
+  background: linear-gradient(148deg, var(--wax-highlight) 0%, var(--wax) 48%, var(--wax-deep) 100%);
+  box-shadow: 0 1px 2px rgba(var(--shadow-rgb), 0.26);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.envelope__seal-whole {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.envelope__seal-half {
+  position: absolute;
+  inset: 0;
+  display: block;
+  will-change: transform, opacity;
+}
+
+.envelope__seal-half .wax-seal {
+  display: block;
+}
+
+.envelope__seal-half--left {
+  clip-path: polygon(
+    0 0,
+    52.5% 0,
+    49.5% 14%,
+    54.5% 29%,
+    48.5% 45%,
+    53.5% 61%,
+    49.5% 77%,
+    52.5% 100%,
+    0 100%
+  );
+}
+
+.envelope__seal-half--right {
+  clip-path: polygon(
+    51.5% 0,
+    100% 0,
+    100% 100%,
+    51.5% 100%,
+    48.5% 77%,
+    52.5% 61%,
+    47.5% 45%,
+    53.5% 29%,
+    48.5% 14%
+  );
+}
+
+.wax-seal {
+  width: 100%;
+  height: 100%;
+}
+
+.envelope-hint {
+  display: block;
+  margin-top: 30px;
+  color: var(--ink-muted);
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.035em;
+  text-transform: lowercase;
+  transition: color 220ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .envelope-trigger:not(:disabled):hover .envelope-hint {
+    color: var(--ink-secondary);
+  }
+}
+
+.envelope-hint::before {
+  display: block;
+  width: 26px;
+  height: 1px;
+  margin: 0 auto 13px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-hairline) 30%,
+    var(--accent-hairline) 70%,
+    transparent
+  );
+  content: '';
+}
+
+@media (max-width: 420px) {
+  .envelope {
+    width: min(84vw, 58vh);
+  }
+
+  .envelope-hint {
+    margin-top: 26px;
+  }
+}
+
+@media (max-height: 620px) {
+  .envelope {
+    width: min(clamp(17rem, 56vw, 26rem), 54vh);
+  }
+
+  .envelope-hint {
+    margin-top: 20px;
+  }
+}

@@ -26,17 +26,17 @@ const EASE_PULL = [0.35, 0, 0.2, 1] as const
  * чтобы письмо появлялось ровно в момент, когда карточка закончила выезд.
  */
 const TIMING = {
-  sealDelay: 0.09,
-  sealDuration: 0.62,
-  flapDelay: 0.32,
-  flapDuration: 0.9,
-  flapSettleAt: 0.72,
-  cardDelay: 0.46,
-  cardDuration: 1.78,
-  envelopeFadeDelay: 1.52,
+  sealDelay: 0.02,
+  sealDuration: 0.42,
+  flapDelay: 0.18,
+  flapDuration: 0.7,
+  flapSettleAt: 0.55,
+  cardDelay: 0.34,
+  cardDuration: 1.25,
+  envelopeFadeDelay: 1.15,
 }
 
-export const ENVELOPE_OPEN_MS = 2280
+export const ENVELOPE_OPEN_MS = 1700
 
 // Крупные колотые осколки сургуча — стартуют вдоль линии трещины
 const WAX_CRUMBS = [
@@ -159,7 +159,7 @@ export function Envelope({ opening, reduceMotion, onOpen }: EnvelopeProps) {
           if (!opening) onOpen()
         }
       }}
-      whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.985 }}
       disabled={opening}
       aria-label={opening ? 'Приглашение открывается' : 'Открыть приглашение'}
       aria-expanded={opening}

@@ -20,7 +20,7 @@ export function Letter({ reduceMotion }: LetterProps) {
         const target = headingRef.current ?? articleRef.current
         target?.focus({ preventScroll: true })
       },
-      reduceMotion ? 160 : 520,
+      reduceMotion ? 160 : 700,
     )
 
     return () => window.clearTimeout(timer)
@@ -30,8 +30,8 @@ export function Letter({ reduceMotion }: LetterProps) {
     hidden: {},
     visible: {
       transition: {
-        delayChildren: reduceMotion ? 0 : 0.26,
-        staggerChildren: reduceMotion ? 0 : 0.11,
+        delayChildren: reduceMotion ? 0 : 0.06,
+        staggerChildren: reduceMotion ? 0 : 0.07,
       },
     },
   }
@@ -41,7 +41,7 @@ export function Letter({ reduceMotion }: LetterProps) {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: reduceMotion ? 0.2 : 0.65, ease: EASE },
+      transition: { duration: reduceMotion ? 0.2 : 0.5, ease: EASE },
     },
   }
 
@@ -63,15 +63,20 @@ export function Letter({ reduceMotion }: LetterProps) {
   const hasNote = invitation.note.trim().length > 0
   const hasSignature = invitation.signature.trim().length > 0
   const hasTagline = invitation.tagline.trim().length > 0
+  const noteParagraphs = invitation.note
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+  const messageLines = invitation.message
+    .split(/\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
 
   return (
     <motion.article
       ref={articleRef}
       id="invitation-letter"
       className="letter"
-      initial={reduceMotion ? { opacity: 0 } : undefined}
-      animate={reduceMotion ? { opacity: 1 } : undefined}
-      transition={{ duration: 0.25, ease: EASE }}
       aria-label="Приглашение на день рождения"
       tabIndex={-1}
     >
@@ -80,14 +85,14 @@ export function Letter({ reduceMotion }: LetterProps) {
         initial={
           reduceMotion
             ? { opacity: 0 }
-            : { opacity: 0, y: -16, scale: 0.972 }
+            : { opacity: 0, y: 10 }
         }
-        animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+        animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
         transition={{
-          duration: reduceMotion ? 0.2 : 0.95,
+          duration: reduceMotion ? 0.2 : 0.72,
           ease: [0.4, 0, 0.18, 1],
           opacity: {
-            duration: reduceMotion ? 0.2 : 0.5,
+            duration: reduceMotion ? 0.2 : 0.3,
             ease: [0.35, 0, 0.45, 1],
           },
         }}
@@ -114,16 +119,22 @@ export function Letter({ reduceMotion }: LetterProps) {
         >
           <div className="letter__inner">
             <div className="letter__top">
-              <motion.p variants={item} className="letter__imprint">
-                приглашение на особенный вечер
-              </motion.p>
-
               <motion.div variants={item} className="letter__sprig-wrap">
                 <Sprig className="letter__sprig" />
               </motion.div>
 
-              <motion.div variants={item} className="letter__photo letter__photo--hero">
-                <img src={asset('ob_2.jpg')} alt="" loading="eager" />
+              <motion.div variants={item}>
+                <div className="letter__photo letter__photo--hero">
+                  <img
+                    src={asset('ob_2.jpg')}
+                    srcSet={`${asset('ob_2-480.jpg')} 480w, ${asset('ob_2-960.jpg')} 960w`}
+                    sizes="(max-width: 640px) calc(100vw - 68px), 512px"
+                    alt=""
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
+                  />
+                </div>
               </motion.div>
 
               {hasGreeting && (
@@ -139,7 +150,11 @@ export function Letter({ reduceMotion }: LetterProps) {
 
               {hasMessage && (
                 <motion.p className="letter__message" variants={item}>
-                  {invitation.message}
+                  {messageLines.map((line, index) => (
+                    <span key={`message-${index}`} className="letter__message-line">
+                      {line}
+                    </span>
+                  ))}
                 </motion.p>
               )}
             </div>
@@ -208,16 +223,32 @@ export function Letter({ reduceMotion }: LetterProps) {
 
             <motion.div className="letter__photos-pair" variants={item}>
               <div className="letter__photo letter__photo--half">
-                <img src={asset('d_n.jpg')} alt="" loading="lazy" />
+                <img
+                  src={asset('d_n.jpg')}
+                  srcSet={`${asset('d_n-320.jpg')} 320w, ${asset('d_n-640.jpg')} 640w`}
+                  sizes="(max-width: 640px) calc((100vw - 92px) / 2), 238px"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <div className="letter__photo letter__photo--half">
-                <img src={asset('d_y.jpg')} alt="" loading="lazy" />
+                <img
+                  src={asset('d_y.jpg')}
+                  srcSet={`${asset('d_y-320.jpg')} 320w, ${asset('d_y-640.jpg')} 640w`}
+                  sizes="(max-width: 640px) calc((100vw - 92px) / 2), 238px"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </motion.div>
 
             {hasDressCode && (
               <motion.p className="letter__dress" variants={item}>
-                <span className="letter__dress-label">💄 дресс-код</span>
+                <span className="letter__dress-label">
+                  <span aria-hidden="true">💄 </span>дресс-код
+                </span>
                 <span className="letter__dress-value">
                   {invitation.dressCode}
                 </span>
@@ -225,9 +256,24 @@ export function Letter({ reduceMotion }: LetterProps) {
             )}
 
             {hasNote && (
-              <motion.p className="letter__note" variants={item}>
-                {invitation.note}
-              </motion.p>
+              <motion.div className="letter__note" variants={item}>
+                {noteParagraphs.map((paragraph, index) => {
+                  // Последний абзац — строчка-подпись: возвращаем её в каллиграфию,
+                  // чтобы основной текст читался спокойным шрифтом.
+                  const closing =
+                    index === noteParagraphs.length - 1 &&
+                    noteParagraphs.length > 1
+
+                  return (
+                    <p
+                      key={`note-${index}`}
+                      className={closing ? 'letter__note-closing' : undefined}
+                    >
+                      {paragraph}
+                    </p>
+                  )
+                })}
+              </motion.div>
             )}
 
             <motion.footer className="letter__footer" variants={item}>
@@ -235,18 +281,26 @@ export function Letter({ reduceMotion }: LetterProps) {
                 <p className="letter__signature">{invitation.signature}</p>
               )}
               {hasTagline && (
-                <p className="letter__tagline">{invitation.tagline}</p>
+                <p className="letter__tagline" lang="en">
+                  {invitation.tagline}
+                </p>
               )}
               <span className="letter__heart-wrap" aria-hidden="true">
                 <Heart className="letter__heart" />
               </span>
             </motion.footer>
 
-            <motion.div
-              variants={item}
-              className="letter__photo letter__photo--final"
-            >
-              <img src={asset('ob_fin.jpg')} alt="" loading="lazy" />
+            <motion.div variants={item} className="letter__final-wrap">
+              <div className="letter__photo letter__photo--final">
+                <img
+                  src={asset('ob_fin.jpg')}
+                  srcSet={`${asset('ob_fin-480.jpg')} 480w, ${asset('ob_fin-960.jpg')} 960w`}
+                  sizes="(max-width: 640px) calc(100vw - 68px), 512px"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
             </motion.div>
           </div>
         </motion.div>

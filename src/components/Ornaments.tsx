@@ -170,7 +170,11 @@ export function CornerFlourish({ className }: OrnamentProps) {
 }
 
 const sealOuterPath =
-  'M50 3c5.2-1.1 9.3 1.8 14.2 2.9 4.9 1.1 8.4 3.8 12.3 6.8 3.9 3 6.2 6.9 9.1 10.8 2.9 3.9 5.8 7.9 6.1 12.9.3 5 3.7 9.2 2.9 14.1-.8 4.9-2.1 9.8-5.2 13.9-3.1 4.1-2.3 8.9-6.1 12.7-3.8 3.8-6.2 8.7-11.1 10.9-4.9 2.2-8.3 5.9-13.2 5.8-4.9-.1-7.9 3.7-12.8 2.1-4.9-1.6-9.2 0.9-13.9-2.3-4.7-3.2-9.8-3.4-12.9-7.2-3.1-3.8-7.9-5.7-9.8-10.2-1.9-4.5-3.9-7.9-4.8-12.9-.9-5-3.7-8.1-2.9-13 0.8-4.9-0.9-8.9 1.9-13.8 2.8-4.9 3.2-9.7 7.1-13.7 3.9-4 5.3-7.9 10.2-10.8 4.9-2.9 8.1-6.8 12.9-7.9 4.8-1.1 8.9-2.8 13.1-2.3 1.1 0.1 2.1-0.9 2.9-0.8Z'
+  'M52.6 1.7c2.6-.5 6.7 3.1 11.6 4.2 4.9 1.1 8.4 3.8 12.3 6.8 3.9 3 6.2 6.9 9.1 10.8 2.9 3.9 5.8 7.9 6.1 12.9.3 5 3.7 9.2 2.9 14.1-.8 4.9-2.1 9.8-5.2 13.9-3.1 4.1-2.3 8.9-6.1 12.7-3.8 3.8-6.2 8.7-11.1 10.9-4.9 2.2-8.3 5.9-13.2 5.8-4.9-.1-7.9 3.7-12.8 2.1-4.9-1.6-9.2 0.9-13.9-2.3-4.7-3.2-9.8-3.4-12.9-7.2-3.1-3.8-7.9-5.7-9.8-10.2-1.9-4.5-3.9-7.9-4.8-12.9-.9-5-3.7-8.1-2.9-13 0.8-4.9-0.9-8.9 1.9-13.8 2.8-4.9 3.2-9.7 7.1-13.7 3.9-4 5.3-7.9 10.2-10.8 4.9-2.9 8.1-6.8 12.9-7.9 4.8-1.1 8.9-2.8 13.1-2.3 1.5-0.2 4.1 0.2 5.5-0.1Z'
+
+/* Углубление оттиска — не идеальный круг: воск «плывёт» под печатью */
+const sealWellPath =
+  'M84.6 50C84.4 58.6 80.6 67.3 73.6 73.6 67 79.6 59 84.6 50 85.2 41.1 85.8 32.2 81.7 26.1 73.9 19.8 65.9 15.6 57.8 15.6 50 15.6 41.2 19.7 32.4 25 25 30.5 17.4 40.2 16.1 50 16.8 59.8 17.5 67.6 21.7 74.6 25.4 81.3 28.9 84.9 41.4 84.6 50Z'
 
 /* Роза на печати: венчик с лепестками, спиральная сердцевина и стебель с листьями */
 const roseOuterPath =
@@ -205,6 +209,8 @@ export function WaxSeal() {
   const waxHighlight = `wax-highlight-${id}`
   const waxShadow = `wax-shadow-${id}`
   const roseEmboss = `rose-emboss-${id}`
+  const waxGrain = `wax-grain-${id}`
+  const waxGrainFine = `wax-grain-fine-${id}`
 
   return (
     <svg
@@ -215,126 +221,203 @@ export function WaxSeal() {
       focusable="false"
     >
       <defs>
-        {/* Мягкий объёмный градиент тела печати (без резкого stroke) */}
-        <radialGradient id={waxBody} cx="30%" cy="24%" r="88%">
-           <stop offset="0%" stopColor="var(--wax-pearl)" />
-           <stop offset="12%" stopColor="var(--wax-pale)" />
-           <stop offset="28%" stopColor="var(--wax-blush)" />
-           <stop offset="45%" stopColor="var(--wax-mid-light)" />
-           <stop offset="65%" stopColor="var(--wax-mid)" />
-           <stop offset="82%" stopColor="var(--wax-dark)" />
-           <stop offset="100%" stopColor="var(--wax-deep)" />
+        {/* Тело печати: общий свет для всех слоёв (userSpaceOnUse) */}
+        <radialGradient
+          id={waxBody}
+          gradientUnits="userSpaceOnUse"
+          cx="34"
+          cy="30"
+          r="82"
+        >
+          <stop offset="0%" stopColor="var(--wax-pale)" />
+          <stop offset="12%" stopColor="var(--wax-blush)" />
+          <stop offset="30%" stopColor="var(--wax-mid-light)" />
+          <stop offset="54%" stopColor="var(--wax-mid)" />
+          <stop offset="79%" stopColor="var(--wax-dark)" />
+          <stop offset="100%" stopColor="var(--wax-deep)" />
         </radialGradient>
-        
-        {/* Выпуклый бортик (валик) — светлый сверху-слева */}
-        <linearGradient id={waxRimOuter} x1="15%" y1="15%" x2="85%" y2="85%">
-           <stop offset="0%" stopColor="var(--wax-rim-light)" />
-           <stop offset="35%" stopColor="var(--wax-rim-mid)" />
-           <stop offset="70%" stopColor="var(--wax)" />
-           <stop offset="100%" stopColor="var(--wax-dark)" />
+
+        {/* Валик: контраст приглушён, иначе воск читается как металл */}
+        <linearGradient
+          id={waxRimOuter}
+          gradientUnits="userSpaceOnUse"
+          x1="14"
+          y1="12"
+          x2="80"
+          y2="86"
+        >
+          <stop offset="0%" stopColor="var(--wax-rim-light)" stopOpacity="0.7" />
+          <stop offset="34%" stopColor="var(--wax-rim-mid)" />
+          <stop offset="68%" stopColor="var(--wax)" />
+          <stop offset="100%" stopColor="var(--wax-dark)" />
         </linearGradient>
-        
-        {/* Внутренняя тень углубления (падающая тень сверху-слева) */}
-        <linearGradient id={waxRimInner} x1="25%" y1="20%" x2="75%" y2="80%">
-           <stop offset="0%" stopColor="var(--wax-deep)" stopOpacity="0.5" />
-           <stop offset="45%" stopColor="var(--wax-dark)" stopOpacity="0.25" />
-           <stop offset="100%" stopColor="var(--wax-well)" stopOpacity="0.08" />
+
+        {/* Внутренняя тень углубления */}
+        <linearGradient
+          id={waxRimInner}
+          gradientUnits="userSpaceOnUse"
+          x1="22"
+          y1="16"
+          x2="76"
+          y2="82"
+        >
+          <stop offset="0%" stopColor="var(--wax-deep)" stopOpacity="0.44" />
+          <stop offset="52%" stopColor="var(--wax-dark)" stopOpacity="0.16" />
+          <stop offset="100%" stopColor="var(--wax-well)" stopOpacity="0.04" />
         </linearGradient>
-        
-        {/* Дно оттиска (углубление) */}
-        <radialGradient id={waxWell} cx="52%" cy="55%" r="68%">
-           <stop offset="0%" stopColor="var(--wax-highlight)" />
-           <stop offset="40%" stopColor="var(--wax-well)" />
-           <stop offset="75%" stopColor="var(--wax-mid)" />
-           <stop offset="100%" stopColor="var(--wax-dark)" />
+
+        {/* Дно оттиска */}
+        <radialGradient
+          id={waxWell}
+          gradientUnits="userSpaceOnUse"
+          cx="46"
+          cy="45"
+          r="40"
+        >
+          <stop offset="0%" stopColor="var(--wax-mid-light)" />
+          <stop offset="46%" stopColor="var(--wax-well)" />
+          <stop offset="78%" stopColor="var(--wax-mid)" />
+          <stop offset="100%" stopColor="var(--wax-dark)" />
         </radialGradient>
-        
-        {/* Верхний блик на сургуче */}
-        <radialGradient id={waxHighlight} cx="28%" cy="22%" r="48%">
-           <stop offset="0%" stopColor="var(--deboss-light)" stopOpacity="0.42" />
-           <stop offset="50%" stopColor="var(--wax-sheen)" stopOpacity="0.22" />
-          <stop offset="100%" stopColor="transparent" />
+
+        {/* Блик слабый и широкий — матовый сургуч почти не «стеклит» */}
+        <radialGradient
+          id={waxHighlight}
+          gradientUnits="userSpaceOnUse"
+          cx="34"
+          cy="29"
+          r="34"
+        >
+          <stop offset="0%" stopColor="var(--deboss-light)" stopOpacity="0.42" />
+          <stop offset="55%" stopColor="var(--wax-sheen)" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="var(--wax-sheen)" stopOpacity="0" />
         </radialGradient>
-        
-        {/* Нижняя тень для объёма */}
-        <radialGradient id={waxShadow} cx="70%" cy="75%" r="45%">
-          <stop offset="0%" stopColor="transparent" />
-           <stop offset="48%" stopColor="var(--wax-edge-shadow)" stopOpacity="0.28" />
-           <stop offset="100%" stopColor="var(--wax-shadow)" stopOpacity="0.45" />
+
+        {/* Нижняя тень — мягкая, без резкого края */}
+        <radialGradient
+          id={waxShadow}
+          gradientUnits="userSpaceOnUse"
+          cx="66"
+          cy="70"
+          r="35"
+        >
+          <stop offset="0%" stopColor="var(--wax-shadow)" stopOpacity="0" />
+          <stop offset="55%" stopColor="var(--wax-edge-shadow)" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="var(--wax-shadow)" stopOpacity="0.26" />
         </radialGradient>
-        
-        {/* Градиент для тиснёной розы (свет на рельефе) */}
-        <linearGradient id={roseEmboss} x1="35%" y1="30%" x2="65%" y2="70%">
-           <stop offset="0%" stopColor="var(--wax-rose-light)" />
-           <stop offset="55%" stopColor="var(--wax-rose-mid)" />
-           <stop offset="100%" stopColor="var(--wax-highlight)" />
+
+        {/* Рельеф розы: свет сверху-слева, мягче к нижнему краю */}
+        <linearGradient
+          id={roseEmboss}
+          gradientUnits="userSpaceOnUse"
+          x1="34"
+          y1="28"
+          x2="68"
+          y2="74"
+        >
+          <stop offset="0%" stopColor="var(--wax-rose-light)" />
+          <stop offset="58%" stopColor="var(--wax-rose-mid)" />
+          <stop offset="100%" stopColor="var(--wax-highlight)" />
         </linearGradient>
+
+        {/* Мелкие поры воска: два векторных паттерна под разными углами —
+            сетка не читается, фильтров нет */}
+        <pattern
+          id={waxGrain}
+          width="4.6"
+          height="4.6"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(17)"
+        >
+          <circle cx="0.9" cy="1.1" r="0.22" fill="var(--wax-shadow)" opacity="0.5" />
+          <circle cx="3.2" cy="2.9" r="0.18" fill="var(--wax-deep)" opacity="0.45" />
+          <circle cx="2.1" cy="3.8" r="0.14" fill="var(--wax-rim-light)" opacity="0.5" />
+        </pattern>
+        <pattern
+          id={waxGrainFine}
+          width="7.9"
+          height="7.9"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(-23)"
+        >
+          <circle cx="1.7" cy="2.3" r="0.3" fill="var(--wax-shadow)" opacity="0.4" />
+          <circle cx="5.6" cy="5.1" r="0.24" fill="var(--wax-rim-light)" opacity="0.4" />
+          <circle cx="6.4" cy="1.2" r="0.2" fill="var(--wax-deep)" opacity="0.36" />
+        </pattern>
       </defs>
 
-      {/* Органическое тело печати — мягкий наплыв без резкого контура */}
+      {/* Вторая, чуть провернутая кромка — воск натёк вторым слоем */}
       <path
         d={sealOuterPath}
-        fill={`url(#${waxBody})`}
-        stroke="none"
-      />
-      
-      {/* Мягкий внешний ободок-бортик (rim) за счёт второго вложенного контура */}
-      <path
-        d={sealOuterPath}
-        fill="none"
-        stroke={`url(#${waxRimOuter})`}
-        strokeWidth="1.2"
-        strokeOpacity="0.35"
-      />
-      
-      {/* Верхний блик на расплавленном сургуче */}
-      <ellipse
-        cx="40"
-        cy="34"
-        rx="18"
-        ry="13"
-        fill={`url(#${waxHighlight})`}
-        opacity="0.9"
-      />
-      
-      {/* Нижняя тень для глубины */}
-      <ellipse
-        cx="60"
-        cy="67"
-        rx="15"
-        ry="12"
-        fill={`url(#${waxShadow})`}
+        fill="var(--wax-deep)"
+        opacity="0.26"
+        transform="translate(50 50) scale(1.006) translate(-50 -50)"
       />
 
-      {/* Выпуклый валик вокруг углубления (освещён сверху-слева) */}
-      <circle
-        cx="50"
-        cy="50"
-        r="36.8"
+      {/* Наплывы по контуру — силуэт перестаёт быть ровным кружком */}
+      <g fill={`url(#${waxBody})`}>
+        <ellipse cx="84.5" cy="30" rx="6.2" ry="4.4" transform="rotate(28 84.5 30)" />
+        <ellipse cx="19.5" cy="70" rx="5.4" ry="4" transform="rotate(-32 19.5 70)" />
+        <ellipse cx="55" cy="93.5" rx="6.4" ry="3.6" transform="rotate(-8 55 93.5)" />
+        <ellipse cx="31" cy="9.5" rx="5" ry="3.4" transform="rotate(12 31 9.5)" />
+      </g>
+
+      {/* Тело печати */}
+      <path d={sealOuterPath} fill={`url(#${waxBody})`} />
+
+      {/* Внешняя кромка: тонкая и приглушённая */}
+      <path
+        d={sealOuterPath}
         fill="none"
         stroke={`url(#${waxRimOuter})`}
-        strokeWidth="4.5"
-        opacity="0.85"
+        strokeWidth="1.4"
+        strokeOpacity="0.26"
       />
-      
-      {/* Дно углубления печати */}
-      <circle
-        cx="50"
-        cy="50"
-        r="34"
-        fill={`url(#${waxWell})`}
+
+      {/* Рассеянные свет и тень — асимметрия света сверху-слева */}
+      <ellipse
+        cx="38"
+        cy="32"
+        rx="22"
+        ry="16"
+        fill={`url(#${waxHighlight})`}
+        opacity="0.28"
       />
-      
-      {/* Внутренняя тень углубления (сверху-слева падающая) */}
-      <circle
-        cx="50"
-        cy="50"
-        r="34"
+      <ellipse
+        cx="62"
+        cy="68"
+        rx="19"
+        ry="15"
+        fill={`url(#${waxShadow})`}
+        opacity="0.8"
+      />
+
+      {/* Валик вокруг углубления — наплыв воска, слегка смещённый от центра */}
+      <path
+        d={sealWellPath}
+        fill="none"
+        stroke={`url(#${waxRimOuter})`}
+        strokeWidth="5.6"
+        strokeOpacity="0.55"
+        transform="translate(50.4 50.2) scale(1.06) translate(-50 -50)"
+      />
+
+      {/* Дно углубления */}
+      <path d={sealWellPath} fill={`url(#${waxWell})`} />
+
+      {/* Внутренняя тень валика — мягкая, не «монетная» обводка */}
+      <path
+        d={sealWellPath}
         fill="none"
         stroke={`url(#${waxRimInner})`}
-        strokeWidth="3.8"
-        opacity="0.7"
+        strokeWidth="4.2"
+        strokeOpacity="0.58"
+        transform="translate(50.2 50.1) scale(0.985) translate(-50 -50)"
       />
+
+      {/* Поры: только внутри силуэта */}
+      <path d={sealOuterPath} fill={`url(#${waxGrain})`} opacity="0.4" />
+      <path d={sealOuterPath} fill={`url(#${waxGrainFine})`} opacity="0.28" />
 
       {/* Тиснёная роза: мягкая тень, затем светлый рельеф */}
       <g fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -356,11 +439,11 @@ export function WaxSeal() {
           <path d={roseLeafRightVeinPath} strokeOpacity="0.6" />
         </g>
 
-        <g stroke={`url(#${roseEmboss})`} strokeWidth="1.22" strokeOpacity="0.96">
+        <g stroke={`url(#${roseEmboss})`} strokeWidth="1.26" strokeOpacity="1">
           <path
             d={roseOuterPath}
             fill={`url(#${roseEmboss})`}
-            fillOpacity="0.3"
+            fillOpacity="0.26"
           />
           {roseSeamPaths.map((d) => (
             <path key={d} d={d} />
@@ -373,12 +456,15 @@ export function WaxSeal() {
           <path d={roseLeafRightVeinPath} strokeOpacity="0.65" />
         </g>
       </g>
-      
-      {/* Текстурные пузырьки воска */}
-       <circle cx="28" cy="32" r="0.85" fill="var(--wax-rim-mid)" opacity="0.45" />
-       <circle cx="72" cy="37" r="0.7" fill="var(--wax-well)" opacity="0.38" />
-       <circle cx="33" cy="69" r="0.75" fill="var(--wax-texture)" opacity="0.42" />
-       <circle cx="68" cy="64" r="0.8" fill="var(--wax)" opacity="0.35" />
+
+      {/* Крупные поры и пузырьки — тактильная неровность поверхности */}
+      <circle cx="28" cy="32" r="0.85" fill="var(--wax-rim-mid)" opacity="0.4" />
+      <circle cx="72" cy="37" r="0.7" fill="var(--wax-well)" opacity="0.34" />
+      <circle cx="33" cy="69" r="0.75" fill="var(--wax-texture)" opacity="0.4" />
+      <circle cx="68" cy="64" r="0.8" fill="var(--wax)" opacity="0.32" />
+      <circle cx="24" cy="50" r="0.55" fill="var(--wax-deep)" opacity="0.26" />
+      <circle cx="78" cy="54" r="0.6" fill="var(--wax-deep)" opacity="0.24" />
+      <circle cx="45" cy="88" r="0.5" fill="var(--wax-shadow)" opacity="0.22" />
     </svg>
   )
 }

@@ -80,18 +80,6 @@ svg {
   );
 }
 
-.background__light {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 62% 54% at 50% 38%,
-    rgba(255, 250, 246, 0.68) 0%,
-    rgba(255, 223, 214, 0.18) 54%,
-    transparent 78%
-  );
-  pointer-events: none;
-}
-
 .background__grain {
   position: absolute;
   inset: 0;
@@ -127,11 +115,19 @@ svg {
   place-items: center;
   width: 100%;
   min-height: 100svh;
-  padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+  padding:
+    calc(24px + env(safe-area-inset-top, 0px))
+    max(16px, env(safe-area-inset-right, 0px))
+    calc(24px + env(safe-area-inset-bottom, 0px))
+    max(16px, env(safe-area-inset-left, 0px));
 }
 
 @media (min-width: 640px) {
   .stage {
-    padding: 40px 32px;
+    padding:
+      max(40px, env(safe-area-inset-top, 0px))
+      max(32px, env(safe-area-inset-right, 0px))
+      max(40px, env(safe-area-inset-bottom, 0px))
+      max(32px, env(safe-area-inset-left, 0px));
   }
 }

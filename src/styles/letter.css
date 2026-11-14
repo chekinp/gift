@@ -14,6 +14,9 @@
 }
 
 .letter {
+  /* Внутри письма золото чуть плотнее, чем на конверте: тонкие линейки
+     должны читаться на светлой бумаге, не превращаясь в декор. */
+  --accent-gold: rgba(178, 146, 118, 0.56);
   width: min(100%, 44rem);
   margin-inline: auto;
   outline: none;
@@ -37,7 +40,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 68px 76px 62px;
+  padding: 58px 76px 58px;
   border-radius: 2px 8px 3px 9px / 8px 2px 9px 3px;
   background-color: var(--paper);
   background-image:
@@ -166,37 +169,42 @@
 .letter__photo {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(var(--shadow-rgb), 0.1);
+  padding: 7px;
+  border: 1px solid rgba(var(--shadow-rgb), 0.12);
   border-radius: 4px 9px 5px 8px / 8px 4px 9px 5px;
-  background: var(--paper-raised);
+  /* Паспарту: снимок лежит на светлой бумаге, а не «плавает» на листе. */
+  background: linear-gradient(165deg, #fffdfa 0%, var(--paper-raised) 100%);
   box-shadow:
-    0 8px 18px -12px rgba(var(--shadow-rgb), 0.42),
-    0 0 0 5px rgba(255, 255, 255, 0.32);
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 22px -16px rgba(var(--shadow-rgb), 0.5),
+    0 2px 5px -3px rgba(var(--shadow-rgb), 0.18);
 }
 
 .letter__photo img {
   display: block;
   width: 100%;
   height: 100%;
+  border-radius: 2px 5px 3px 5px / 4px 2px 5px 3px;
   object-fit: cover;
+  filter: saturate(0.84) contrast(0.98) brightness(1.02) sepia(0.04);
 }
 
 .letter__photo--hero {
-  width: min(100%, 31rem);
+  width: 100%;
   aspect-ratio: 16 / 9;
-  margin: 4px auto 26px;
+  margin: 0 auto 26px;
   transform: rotate(-0.7deg);
 }
 
 .letter__photo--hero img {
-  object-position: center 42%;
+  object-position: center 12%;
 }
 
 .letter__photos-pair {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(12px, 2.4vw, 22px);
-  margin: 30px auto 34px;
+  margin: 32px auto;
 }
 
 .letter__photo--half {
@@ -212,39 +220,30 @@
 }
 
 .letter__photo--half:first-child img {
-  object-position: center;
+  object-position: center 32%;
 }
 
 .letter__photo--half:last-child img {
-  object-position: center 42%;
+  object-position: center 34%;
+}
+
+.letter__final-wrap {
+  margin-top: 32px;
 }
 
 .letter__photo--final {
   width: 100%;
   aspect-ratio: 16 / 9;
-  margin: 34px auto 0;
-  transform: rotate(0.6deg);
+  transform: rotate(0.5deg);
 }
 
 .letter__photo--final img {
   object-position: center 48%;
 }
 
-.letter__imprint {
-  margin-bottom: 15px;
-  color: var(--ink-muted);
-  font-family: var(--font-serif);
-  font-size: 0.72rem;
-  font-style: italic;
-  letter-spacing: 0.14em;
-  line-height: 1.2;
-  text-align: center;
-  text-transform: lowercase;
-}
-
 .letter__sprig-wrap {
-  width: 152px;
-  margin: 0 auto 10px;
+  width: 168px;
+  margin: 0 auto 18px;
   color: var(--ink-secondary);
 }
 
@@ -255,29 +254,34 @@
 }
 
 .letter__greeting {
-  max-width: 22ch;
+  max-width: 100%;
   padding-bottom: 12px;
   color: var(--ink);
   font-family: var(--font-script);
-  font-size: clamp(3rem, 7vw, 4.7rem);
+  font-size: clamp(3rem, 6.4vw, 4.1rem);
   font-weight: 400;
   line-height: 1.15;
   text-align: center;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 .letter__message {
-  max-width: 32ch;
-  margin: 16px auto 0;
+  max-width: 30ch;
+  margin: 14px auto 0;
   padding-bottom: 4px;
   color: var(--ink-secondary);
   font-family: var(--font-script);
-  font-size: clamp(1.72rem, 3vw, 2.25rem);
+  font-size: clamp(1.65rem, 2.6vw, 2.1rem);
   font-weight: 400;
   line-height: 1.55;
   text-align: center;
-  text-wrap: pretty;
-  white-space: pre-line;
+  text-wrap: balance;
+}
+
+.letter__message-line {
+  display: block;
+  text-wrap: balance;
 }
 
 .letter__divider {
@@ -286,7 +290,7 @@
   justify-content: center;
   gap: 15px;
   width: min(100%, 15rem);
-  margin: 24px auto 22px;
+  margin: 28px auto 24px;
 }
 
 .letter__divider-line {
@@ -319,9 +323,9 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: 20px;
-  margin: 0 auto 28px;
-  padding: 7px 0;
+  gap: 24px;
+  margin: 0 auto 30px;
+  padding: 14px 0 12px;
   border-top: 1px solid var(--accent-gold);
   border-bottom: 1px solid var(--accent-gold);
 }
@@ -363,24 +367,26 @@
 
 .letter__label {
   display: block;
-  margin-bottom: 1px;
+  margin-bottom: 5px;
   color: var(--wax-deep);
   font-family: var(--font-serif);
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-style: italic;
   font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: 0.05em;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
   text-transform: lowercase;
 }
 
 .letter__value {
   color: var(--ink);
-  font-family: var(--font-script);
-  font-size: clamp(1.72rem, 2.8vw, 2.15rem);
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 3vw, 1.55rem);
   font-weight: 400;
-  line-height: 1.35;
+  line-height: 1.45;
+  letter-spacing: 0.008em;
   text-align: center;
+  text-wrap: balance;
   overflow-wrap: break-word;
   white-space: pre-line;
 }
@@ -390,40 +396,56 @@
 }
 
 .letter__value-line--soft {
-  margin-top: 1px;
+  margin-top: 2px;
   color: var(--ink-secondary);
-  font-size: 0.88em;
-  line-height: 1.35;
+  font-size: 0.84em;
+  line-height: 1.4;
 }
 
 @media (min-width: 641px) {
   .letter__detail--where .letter__value {
-    font-size: clamp(1.72rem, 2.4vw, 1.9rem);
+    font-size: clamp(1.12rem, 2.5vw, 1.2rem);
   }
 }
 
 .letter__directions {
-  display: inline-block;
-  margin-top: 7px;
-  border-bottom: 1px solid var(--accent-gold);
-  color: var(--ink-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  margin-top: 2px;
+  padding: 0 8px;
+  color: var(--ink-secondary);
   font-family: var(--font-serif);
-  font-size: 0.88rem;
+  font-size: 0.98rem;
   font-style: italic;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   line-height: 1.4;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: rgba(105, 79, 142, 0.5);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
   transition:
     color 180ms var(--ease-out),
-    border-color 180ms var(--ease-out);
+    text-decoration-color 180ms var(--ease-out);
+}
+
+.letter__directions::after {
+  content: '↗';
+  font-size: 0.92em;
+  font-style: normal;
+  line-height: 1;
+  opacity: 0.75;
+  transform: translateY(-1px);
 }
 
 .letter__directions:hover {
-  border-bottom-color: var(--wax);
   color: var(--wax-deep);
+  text-decoration-color: var(--wax);
 }
 
 .letter__directions:focus-visible {
+  outline-color: var(--wax-deep);
   outline-offset: 3px;
 }
 
@@ -433,16 +455,16 @@
   align-items: baseline;
   justify-content: center;
   gap: 0 10px;
-  margin: 0 auto 22px;
+  margin: 0 auto 24px;
   text-align: center;
 }
 
 .letter__dress-label {
   color: var(--wax-deep);
   font-family: var(--font-serif);
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-style: italic;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   line-height: 1.3;
   text-transform: lowercase;
 }
@@ -456,17 +478,38 @@
 }
 
 .letter__note {
-  max-width: 30ch;
-  margin: 0 auto 22px;
+  max-width: 30rem;
+  margin: 0 auto 24px;
   padding-bottom: 2px;
   color: var(--ink-secondary);
-  font-family: var(--font-script);
-  font-size: clamp(1.45rem, 2.5vw, 1.75rem);
+  font-family: var(--font-serif);
+  font-size: 1.18rem;
   font-weight: 400;
-  line-height: 1.45;
+  line-height: 1.68;
+  letter-spacing: 0.005em;
   text-align: center;
   text-wrap: pretty;
-  white-space: pre-line;
+}
+
+.letter__note p {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.letter__note p + p {
+  margin-top: 18px;
+}
+
+/* Последний абзац снова набран каллиграфией: после спокойного текста
+   письмо возвращается к рукописной интонации перед подписью. */
+.letter__note p.letter__note-closing {
+  margin-top: 20px;
+  color: var(--ink);
+  font-family: var(--font-script);
+  font-size: clamp(1.9rem, 3.2vw, 2.15rem);
+  line-height: 1.4;
+  letter-spacing: 0;
+  text-wrap: balance;
 }
 
 .letter__footer {
@@ -474,8 +517,8 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 0;
-  margin-top: 14px;
-  padding-right: 10px;
+  margin-top: 20px;
+  padding-right: 0;
 }
 
 .letter__signature {
@@ -486,27 +529,27 @@
   line-height: 1.25;
   text-align: right;
   white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .letter__tagline {
-  margin-top: 3px;
-  color: var(--ink-muted);
+  margin-top: 4px;
+  color: var(--ink-secondary);
   font-family: var(--font-serif);
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   font-style: italic;
-  letter-spacing: 0.06em;
-  line-height: 1.3;
+  letter-spacing: 0.045em;
+  line-height: 1.35;
   text-align: right;
 }
 
 .letter__heart-wrap {
   display: block;
   width: 38px;
-  margin-top: -2px;
-  margin-right: 18px;
+  margin: 4px 2px 0 0;
   color: var(--wax);
-  opacity: 0.82;
-  transform: rotate(-9deg);
+  opacity: 0.78;
+  transform: rotate(-8deg);
   transform-origin: 50% 60%;
 }
 
@@ -517,8 +560,14 @@
 }
 
 @media (max-width: 640px) {
+  .stage--letter {
+    padding-inline: 12px;
+    padding-top: max(18px, 2.6vh);
+    padding-bottom: calc(max(18px, 2.6vh) + env(safe-area-inset-bottom));
+  }
+
   .letter__paper {
-    padding: 48px 30px 42px;
+    padding: 44px 22px 38px;
   }
 
   .letter__paper::before {
@@ -551,31 +600,63 @@
   }
 
   .letter__photo--hero {
-    margin-bottom: 20px;
+    aspect-ratio: 3 / 2;
+    margin: 0 auto 22px;
+  }
+
+  .letter__photo--hero img {
+    object-position: center 27%;
   }
 
   .letter__photos-pair {
     gap: 10px;
-    margin: 24px auto 28px;
+    margin: 26px auto 28px;
   }
 
-  .letter__photo--final {
+  .letter__photo--half {
+    aspect-ratio: 3 / 4;
+  }
+
+  .letter__photo--half:first-child img {
+    object-position: center 32%;
+  }
+
+  .letter__photo--half:last-child img {
+    object-position: center 28%;
+  }
+
+  .letter__final-wrap {
     margin-top: 28px;
   }
 
-  .letter__sprig-wrap {
-    width: 126px;
-    margin-bottom: 6px;
+  .letter__photo--final {
+    aspect-ratio: 3 / 2;
   }
 
-  .letter__imprint {
-    margin-bottom: 11px;
-    font-size: 0.65rem;
+  .letter__photo--final img {
+    object-position: center 45%;
+  }
+
+  .letter__sprig-wrap {
+    width: 122px;
+    margin-bottom: 16px;
+  }
+
+  .letter__greeting {
+    max-width: 100%;
+    padding-bottom: 6px;
+    font-size: clamp(2.5rem, 11vw, 3.2rem);
+    line-height: 1.12;
   }
 
   .letter__message {
-    margin-top: 10px;
-    line-height: 1.5;
+    max-width: 30ch;
+    margin-top: 8px;
+    padding-bottom: 2px;
+    font-size: 1.55rem;
+    letter-spacing: 0.005em;
+    line-height: 1.6;
+    text-wrap: balance;
   }
 
   .letter__divider {
@@ -584,12 +665,41 @@
 
   .letter__details {
     grid-template-columns: 1fr;
-    gap: 17px;
-    padding: 8px 0;
+    gap: 16px;
+    margin-bottom: 26px;
+    padding: 12px 0 10px;
+  }
+
+  .letter__label {
+    font-size: 0.95rem;
+  }
+
+  .letter__value {
+    font-size: 1.25rem;
+    line-height: 1.45;
+    text-wrap: balance;
+  }
+
+  .letter__value-line {
+    text-wrap: balance;
+  }
+
+  .letter__value-line--soft {
+    font-size: 0.84em;
+    line-height: 1.4;
+  }
+
+  .letter__detail--where .letter__value {
+    font-size: 1.15rem;
   }
 
   .letter__detail {
     padding-inline: 0;
+  }
+
+  .letter__directions {
+    min-height: 44px;
+    padding: 0 10px;
   }
 
   .letter__details-sep {
@@ -614,6 +724,34 @@
     left: 50%;
   }
 
+  .letter__dress {
+    margin-bottom: 22px;
+  }
+
+  .letter__dress-label {
+    font-size: 0.95rem;
+  }
+
+  .letter__note {
+    max-width: 100%;
+    margin-bottom: 22px;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    text-align: center;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+  }
+
+  .letter__note p + p {
+    margin-top: 16px;
+  }
+
+  .letter__note p.letter__note-closing {
+    margin-top: 18px;
+    font-size: 1.8rem;
+    line-height: 1.4;
+  }
+
   .letter__footer {
     align-items: center;
     margin-top: 18px;
@@ -621,45 +759,62 @@
   }
 
   .letter__signature {
+    font-size: 1.8rem;
     text-align: center;
   }
 
   .letter__tagline {
+    font-size: 0.9rem;
     text-align: center;
   }
 
   .letter__heart-wrap {
-    margin-right: 0;
+    width: 36px;
+    margin: 4px 0 0;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 719px) {
+  /* Стык планшета: широкие поля ещё включены, но 76 px с каждой стороны
+     уже слишком сжимают строку — отдаём часть воздуха контенту. */
+  .letter__paper {
+    padding: 56px 48px 52px;
   }
 }
 
 @media (max-width: 380px) {
   .letter__paper {
-    padding: 38px 24px 32px;
+    padding: 36px 18px 32px;
   }
 
   .letter__sprig-wrap {
-    width: 112px;
+    width: 108px;
   }
 
   .letter__greeting {
-    padding-bottom: 8px;
+    padding-bottom: 6px;
   }
 
   .letter__message {
-    font-size: 1.55rem;
-  }
-
-  .letter__imprint {
-    letter-spacing: 0.08em;
+    font-size: 1.5rem;
+    line-height: 1.62;
   }
 
   .letter__value {
-    font-size: 1.55rem;
+    font-size: 1.18rem;
+  }
+
+  .letter__detail--where .letter__value {
+    font-size: 1.08rem;
   }
 
   .letter__note {
-    font-size: 1.35rem;
+    font-size: 1.02rem;
+    line-height: 1.7;
+  }
+
+  .letter__note p.letter__note-closing {
+    font-size: 1.62rem;
   }
 }
 
